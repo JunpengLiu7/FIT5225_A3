@@ -1,0 +1,39 @@
+FROM amazonlinux:1
+
+# workdir
+WORKDIR /
+
+# update 
+RUN yum update -y
+
+# Install libraries
+RUN yum install gcc openssl-devel wget tar -y
+# download OPenSSL 1.1.1g
+RUN wget https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+RUN tar -xzvf openssl-1.1.1g.tar.gz
+# workdir
+WORKDIR /openssl-1.1.1g
+# confiugure Openssl
+RUN ./config --prefix=/home/username/openssl --openssldir=/home/username/openssl no-ssl2
+RUN make install
+
+# workdir
+WORKDIR /
+
+# download python
+RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz
+RUN tar -xzvf Python-3.10.0.tgz
+
+# change workdir
+WORKDIR /Python-3.10.0
+
+# install python
+RUN ./configure --enable-optimizations
+RUN make install
+
+# install python packages
+RUN mkdir /packages
+# wirte cv2 to reuqirements.txt
+RUN echo "opencv-python" >> /packages/requirements.txt
+RUN mkdir -p /packages/opencv-python-3.10/python/lib/python3.10/site-packages
+RUN pip3.10 install -r /packages/requirements.txt -t /packages/opencv-python-3.10/python/lib/python3.10/site-packages

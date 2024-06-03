@@ -4,8 +4,10 @@ import boto3
 import os
 import numpy as np
 import cv2
+import uuid
 
 #{"user_name":"ID_token","image_file": "base 64","image_name":"name.jpg" }
+print('test')
 FOLDER = "images/"
 FOLDER_RESIZE = "images_resized/"
 s3 = boto3.client('s3')
@@ -14,10 +16,10 @@ WIDTH = 100
 def lambda_handler(event, context):
     
     # get the data
-    # data = json.loads(event['body'])
-    username = event['user_name']
-    image_name = event['image_name']
-    image_file = event['image_file']
+    data = json.loads(event['body'])
+    username = data['user_name']
+    image_name = data['image_name']
+    image_file = data['image_file']
     
     print(username)
     print('lalal')

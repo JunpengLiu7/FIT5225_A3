@@ -1,1 +1,3 @@
-this is a test.
+# get dependencies from docker
+docker run --rm -it -v ${pwd}:/data lambda-layer-cv2-v1 cp -r /packages/opencv-python-3.9/ /data  
+zip -r opencv-python-38.zip python  
