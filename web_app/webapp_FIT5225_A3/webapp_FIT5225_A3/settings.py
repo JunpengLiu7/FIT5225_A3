@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -116,9 +116,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # AWS Cognito settings
-AWS_COGNITO_USER_POOL_ID = 'us-east-1_689OkXKBa'  # Add your User Pool ID
-AWS_COGNITO_CLIENT_ID = 'oa65p32p3i6fiq8hq56hufd5h'  # Add your App Client ID
-AWS_COGNITO_REGION = 'us-east-1'  # Add your AWS Region
+AWS_COGNITO_USER_POOL_ID = 'us-east-1_689OkXKBa'  
+AWS_COGNITO_CLIENT_ID = 'oa65p32p3i6fiq8hq56hufd5h'  
+AWS_COGNITO_REGION = 'us-east-1'
+
 
 # CORS settings
 CORS_ORIGIN_ALLOW_ALL = True  # Allow all origins for simplicity; restrict in production
