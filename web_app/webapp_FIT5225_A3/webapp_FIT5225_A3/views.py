@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.safestring import mark_safe
 from .pageination import Pagination
 from django.http.request import QueryDict
+import boto3
 
 
 def cognito_login_view(request):
@@ -30,6 +31,20 @@ def cognito_login_view(request):
     else:
         # Handle GET request if needed
         return HttpResponseNotAllowed(['POST'])
+    
+def image_upload_view(request):
+    if request.method == 'POST' and request.FILES['image']:
+        image = request.FILES['image']
+        s3 = boto3.client('s3',
+                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                          region_name=settings.AWS_REGION_NAME)
+
+        bucket_name = settings.AWS_S3_BUCKET_NAME
+        s3.upload_fileobj(image, bucket_name, image.name)
+
+        return HttpResponse('Image uploaded successfully.')
+    return render(request, 'upload.html')
     
    
 def home(request):
