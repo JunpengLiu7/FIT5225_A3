@@ -113,6 +113,21 @@ USE_I18N = True
 USE_TZ = True
 
 
+# AWS Credentials
+AWS_ACCESS_KEY_ID = 'your_aws_access_key_id'
+AWS_SECRET_ACCESS_KEY = 'your_aws_secret_access_key'
+AWS_REGION_NAME = 'your_aws_region_name'
+
+
+# AWS S3 Settings
+AWS_S3_BUCKET_NAME = 'your_aws_s3_bucket_name'
+
+# Django Storage Config
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 

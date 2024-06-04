@@ -27,9 +27,5 @@ def image_upload_view(request):
         bucket_name = settings.AWS_S3_BUCKET_NAME
         s3.upload_fileobj(image, bucket_name, image.name)
 
-        # Save the image information to the database
-        image_obj = Image.objects.create(file=image, name=image.name)
-        image_obj.save()
-
         return HttpResponse('Image uploaded successfully.')
     return render(request, 'upload.html')
