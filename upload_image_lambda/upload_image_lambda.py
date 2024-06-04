@@ -37,7 +37,7 @@ def lambda_handler(event, context):
     
     # resize the image .shape->(height, width) to thumbnail
     image_arrary = np.asarray(bytearray(decod_image), np.uint8)
-    upload_image = cv2imdecoder(image_arrary, cv2.IMREAD_COLOR)
+    upload_image = cv2.imdecoder(image_arrary, cv2.IMREAD_COLOR)
 
     height = int(upload_image.shape[0] * (WIDTH / upload_image.shape[1]))
     resize_image = cv2.resize(upload_image, (width, height), interpolation=cv2.INTER_AREA)
