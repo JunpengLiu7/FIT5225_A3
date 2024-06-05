@@ -20,9 +20,9 @@ def image_upload_view(request):
     if request.method == 'POST' and request.FILES['image']:
         image = request.FILES['image']
         s3 = boto3.client('s3',
-                          aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                          aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                          region_name=settings.AWS_REGION_NAME)
+                          aws_access_key_id=None,
+                          aws_secret_access_key=None,
+                          aws_session_token=access_token)
 
         bucket_name = settings.AWS_S3_BUCKET_NAME
         s3.upload_fileobj(image, bucket_name, image.name)
