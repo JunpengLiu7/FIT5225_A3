@@ -1,11 +1,27 @@
 import json, time, os, urllib.request
 from jose import jwk, jwt
-from decouple import config
+# from decouple import config
 from jose.utils import base64url_decode
 
-region = config('COGNITO_REGION_NAME')
-userpool_id = config('USER_POOL_ID')
-app_client_id = config('CLIENT_ID')
+# env paras
+REDIRECT_URL = 'http://localhost:8000'
+TOKEN_ENDPOINT = 'https://5225a3test.auth.us-east-1.amazoncognito.com/oauth2/token'
+#TOKEN_ENDPOINT = 'https://5225a3test1.auth.us-east-1.amazoncognito.com/oauth2/token'
+
+CLIENT_ID = '1mc2fqr6eho90ak0tajeuv55gq'
+#CLIENT_ID = '3em6frsfg726bkb5kkbgn17l4r'
+USER_POOL_ID = 'us-east-1_c63xLDbhq'
+#USER_POOL_ID = 'us-east-1_wMgJLv0Az'
+# CLIENT_SECRET = 'qkdpl928cducncnu5ib551vkcs2cojn2lm6cer79utenu64nmhk'
+COGNITO_REGION_NAME = 'us-east-1'
+
+region = COGNITO_REGION_NAME
+userpool_id = USER_POOL_ID
+app_client_id = CLIENT_ID
+
+#region = config('COGNITO_REGION_NAME')
+#userpool_id = config('USER_POOL_ID')
+#app_client_id = config('CLIENT_ID')
 
 keys_url = 'https://cognito-idp.{}.amazonaws.com/{}/.well-known/jwks.json'.format(region, userpool_id)
 
