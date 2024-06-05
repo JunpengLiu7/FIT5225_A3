@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card">
+    <div class="card-body">
+<div class='col-md-6 offset-md-3'>
+
+    {% if user.is_authenticated %} 
+
+    <form method='POST' action="{% url 'add_sender_record' %}">
+        {% csrf_token %}
+
+        <h3>New Sender</h3>
+
+        {{form.as_p}}
+        
+
+    </br>
+        <button type="submit" class="btn btn-secondary">Add sender</button>
+
+        <a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+
+    </form>
+
+   
+
+    {% endif %}
+</div>
+</div>    
+</div>
+{% endblock %}
