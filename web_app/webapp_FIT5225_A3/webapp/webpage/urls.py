@@ -21,6 +21,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),
+    path('upload_image/', views.upload_image, name='upload_image'),
     #path('login/', views.login_user, name='login'),
     # path('logout/', views.logout_user, name='logout'),
     # change the uil by add infornt
