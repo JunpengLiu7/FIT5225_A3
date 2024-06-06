@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Image Upload</title>
+    <title>Upload Image</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-  <h1>Upload an Image</h1>
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <input type="file" name="image" />
-    <button type="submit">Upload</button>
-  </form>
+    <h1>Upload Image</h1>
+    <input type="file" id="image_file">
+    <button onclick="uploadImage()">Upload</button>
+
+    <script>
+        function uploadImage() {
+            var file = document.getElementById('image_file').files[0];
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var base64_image = e.target.result.split(',')[1];
+                var data = {
+                    image_file: base64_image,
+                    username: 'your_username',
+                    access_token: 'your_access_token'
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'upload_image' %}",
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                        console.log(response);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    </script>
 </body>
 </html>
