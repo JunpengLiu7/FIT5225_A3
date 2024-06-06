@@ -32,4 +32,4 @@ urlpatterns = [
     # https://texting.alexxhometest.com/80e9f013-5924-4da0-aa6f-21d552f9e8ac
     # token: 4eee0753-2969-4c14-9bc7-387234169bc5
 
-] + static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+]
