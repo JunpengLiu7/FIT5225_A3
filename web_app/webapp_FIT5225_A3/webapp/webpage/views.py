@@ -10,6 +10,8 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from django.template.loader import render_to_string
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 
 
 
@@ -125,30 +127,55 @@ def home(request):
 #     response = requests.post(api_endpoint, headers=headers, json=data)
 #     return response.status_code, response.text
 
+# @csrf_exempt
+# def upload_image(request):
+#     if request.method == "POST":
+#         data = json.loads(request.body)
+#         username = data["username"]
+#         image_name = data["image_name"]
+#         base64_image = data["image_file"]
+#         access_token = data["access_token"]
+
+#         # Decode the base64 image data
+#         image_data = base64.b64decode(base64_image)
+
+#         # Save the image or do whatever you need to do with it
+#         with open(f"{username}_{image_name}", "wb") as f:
+#             f.write(image_data)
+
+#         return JsonResponse({"message": "Image uploaded successfully"})
+#     elif request.method == "GET":
+#         return HttpResponse(render_to_string('upload_image.html'))
+    
+#     # If the request method is not POST, return an HttpResponse object
+#     else:
+#         return JsonResponse({"error": "Invalid request method"}, status=405)
+
 @csrf_exempt
 def upload_image(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        username = data["username"]
-        image_name = data["image_name"]
-        base64_image = data["image_file"]
-        access_token = data["access_token"]
+    if request.method == 'POST':
+        try:
+            image_file = request.FILES['image_file']
+        except KeyError:
+            return JsonResponse({'error': 'No image file provided'}, status=400)
 
-        # Decode the base64 image data
-        image_data = base64.b64decode(base64_image)
+        # Get the current user from the request
+        user = request.user
+        username = user.username
+        image_name = image_file.name
 
-        # Save the image or do whatever you need to do with it
-        with open(f"{username}_{image_name}", "wb") as f:
-            f.write(image_data)
+        # Save the image
+        file_path = os.path.join(username, image_name)
+        with default_storage.open(file_path, 'wb') as destination:
+            for chunk in image_file.chunks():
+                destination.write(chunk)
 
-        return JsonResponse({"message": "Image uploaded successfully"})
-    elif request.method == "GET":
-        return HttpResponse(render_to_string('upload_image.html'))
-    
-    # If the request method is not POST, return an HttpResponse object
+        return JsonResponse({'message': 'Image uploaded successfully'})
+    elif request.method == 'GET':
+        # Render the upload form
+        return render(request, 'upload_image.html')
     else:
-        return JsonResponse({"error": "Invalid request method"}, status=405)
-
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
     # code = request.GET.get('code')
     # userData = getTokens(code)
     # return render(request, 'home.html')

@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>Upload Image</h1>
+    <div id="feedback-container"></div>
     <form id="upload-form">
         <label for="image-file">Image File:</label>
         <input type="file" id="image-file" name="image-file" required>
@@ -29,14 +30,33 @@
                 }
             })
             .then(function(response) {
-                if (response.ok) {
-                    console.log('Image uploaded successfully');
-                } else {
-                    console.error('Error uploading image');
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
+        return response.json();
+            })
+            .then(function(data) {
+                var feedbackContainer = document.getElementById('feedback-container');
+                feedbackContainer.innerHTML = '';
+
+                var feedbackElement = document.createElement('div');
+                feedbackElement.classList.add('alert');
+                feedbackElement.classList.add(data.success ? 'alert-success' : 'alert-danger');
+                feedbackElement.textContent = data.message;
+                feedbackContainer.appendChild(feedbackElement);
             })
             .catch(function(error) {
                 console.error('Error:', error);
+
+                var feedbackContainer = document.getElementById('feedback-container');
+                feedbackContainer.innerHTML = '';
+
+                var feedbackElement = document.createElement('div');
+                feedbackElement.classList.add('alert');
+                feedbackElement.classList.add('alert-danger');
+                feedbackElement.textContent = 'Error uploading the image. Please try again.';
+                feedbackContainer.appendChild(feedbackElement);
             });
         });
     </script>
