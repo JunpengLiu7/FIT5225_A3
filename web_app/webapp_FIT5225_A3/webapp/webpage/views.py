@@ -9,6 +9,7 @@ import requests
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from django.template.loader import render_to_string
 
 
 
@@ -141,6 +142,12 @@ def upload_image(request):
             f.write(image_data)
 
         return JsonResponse({"message": "Image uploaded successfully"})
+    elif request.method == "GET":
+        return HttpResponse(render_to_string('upload_image.html'))
+    
+    # If the request method is not POST, return an HttpResponse object
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
 
     # code = request.GET.get('code')
     # userData = getTokens(code)

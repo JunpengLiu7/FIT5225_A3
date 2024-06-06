@@ -2,51 +2,43 @@
 <html>
 <head>
     <title>Upload Image</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Upload Image</h1>
-    <input type="file" id="image_file" onchange="updateImageName()">
-    <div id="image_info">
-        <p>Image Name: <span id="image_name"></span></p>
-    </div>
-    <button onclick="uploadImage()">Upload</button>
+    <form id="upload-form">
+        <label for="image-file">Image File:</label>
+        <input type="file" id="image-file" name="image-file" required>
+        <br>
+        <button type="submit">Upload</button>
+    </form>
 
     <script>
-        function updateImageName() {
-            var file = document.getElementById('image_file').files[0];
-            var image_name = file.name;
-            document.getElementById('image_name').textContent = image_name;
-        }
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        function uploadImage() {
-            var file = document.getElementById('image_file').files[0];
-            var image_name = document.getElementById('image_name').textContent;
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var base64_image = e.target.result.split(',')[1];
-                var data = {
-                    username: '{{ request.user.username }}',
-                    image_name: image_name,
-                    image_file: base64_image,
-                    access_token: 'your_access_token'
-                };
-                $.ajax({
-                    type: "POST",
-                    url: "{% url 'upload_image' %}",
-                    data: JSON.stringify(data),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function(response) {
-                        console.log(response);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            };
-            reader.readAsDataURL(file);
-        }
+            var imageFile = document.getElementById('image-file').files[0];
+
+            var formData = new FormData();
+            formData.append('image_file', imageFile);
+
+            fetch('/upload_image/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(function(response) {
+                if (response.ok) {
+                    console.log('Image uploaded successfully');
+                } else {
+                    console.error('Error uploading image');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+            });
+        });
     </script>
 </body>
 </html>
