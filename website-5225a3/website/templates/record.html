@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style type="text/css">
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+
+<div class="card">
+    <div class="card-header">
+        <Strong>{{customer_record.first_name}}{{customer_record.last_name}}</strong>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        
+        <Strong>Phone number: </strong>{{customer_record.phone}}</br>
+        <Strong>Email address: </strong>{{customer_record.email}}</br>
+      </p>
+      <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+    </div>
+  </div>
+
+</br>
+
+<div class="flex-container">
+  <div class="flex-column">
+    <a href="{% url 'customer_record_management' %}" class="btn btn-primary" >Back</a>
+    </div>
+  </div>  
+
+</br>
+
+<div class="card">
+  <div class="card-header">
+      <Strong>Messages:</strong>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+
+    
+    {% for chat in chats %}
+    
+    {% if chat.contact.id == customer_record.id or chat.sender.id == customer_record.id %} 
+
+      <Strong>Sender: </strong>{{chat.sender}}</br>
+      <Strong>Receiver: </strong>{{chat.contact}}</br>
+      <Strong>time: </strong>{{chat.sent_datetime}}</br>
+      <Strong>status: </strong>{{chat.status}}</br>
+      <Strong>Method: </strong>{{chat.send_method}}</br> 
+      <Strong>Message: </strong>{{chat.message_text}}</br>
+      </br>
+    {% endif %}
+    {% endfor %}
+
+    
+    
+  </p>
+</div>
+</div>
+
+</br></br>
+
+
+
+
+{% endblock %}
+

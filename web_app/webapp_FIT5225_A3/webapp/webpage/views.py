@@ -158,17 +158,26 @@ def upload_image(request):
             image_file = request.FILES['image_file']
         except KeyError:
             return JsonResponse({'error': 'No image file provided'}, status=400)
+        
+        image_base64 = base64.b64encode(image_file.read()).decode("utf-8")
+        print(image_base64)
 
         # Get the current user from the request
         user = request.user
         username = user.username
         image_name = image_file.name
-
+        auth = 'Bearer '+ id_token
+        headers = {
+            "Cont-Type": "application/json",
+            "Authorization": auth}
+        
+        url = "https://pu75uefuh1.execute-api.us-east-1.amazonaws.com/prod/image_upload_test"
+        
         # Save the image
-        file_path = os.path.join(username, image_name)
-        with default_storage.open(file_path, 'wb') as destination:
-            for chunk in image_file.chunks():
-                destination.write(chunk)
+        # file_path = os.path.join(username, image_name)
+        # with default_storage.open(file_path, 'wb') as destination:
+        #     for chunk in image_file.chunks():
+        #         destination.write(chunk)
 
         return JsonResponse({'message': 'Image uploaded successfully'})
     elif request.method == 'GET':
@@ -180,4 +189,24 @@ def upload_image(request):
     # userData = getTokens(code)
     # return render(request, 'home.html')
 
-    
+    def img_pyload(self):
+        path = get_files_paths(dir)
+        
+        selected_path = random.sample(path, 128)
+        
+        for i in selected_path:
+            #print("file path: \n", i)
+
+            headers = {"Content-Type":"application/json"}
+            # Generate a UUID based on the MD5 hash of a namespace identifier
+            id = str(uuid.uuid3(uuid.NAMESPACE_DNS, i))
+            base64_image = imagebase64(i)
+            #print(base64_image)
+            pyload = {
+                "id": id,
+                "image": base64_image
+            }
+            #print(pyload)
+
+            info = self.client.post("/image_detection", headers=headers, json=pyload)
+            print(info, json.dumps(info.text))

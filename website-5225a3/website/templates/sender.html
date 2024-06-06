@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="card">
+    <div class="card-header">
+        <Strong>{{sender_record.phone_number_id}}</strong>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        
+        <Strong>Phone number: </strong>{{sender_record.access_token}}</br>
+        <Strong>Create time: </strong>{{sender_record.time}}</br>
+      </p>
+      <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+    </div>
+  </div>
+
+</br></br>
+<a href="{% url 'home' %}" class="btn btn-primary">Back</a>
+
+<a href="{% url 'update_sender_record' sender_record.id %}" class="btn btn-primary">Update</a>
+
+<a href="{% url 'delete_sender_record' sender_record.id %}" class="btn btn-danger">Delete</a>
+
+{% endblock %}
