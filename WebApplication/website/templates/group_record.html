@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<div class="card">
+    <div class="card-header">
+        <Strong>{{group_member_record.group_name}}</strong>
+    </div>
+    <div class="card-body">
+
+        
+      <p class="card-text">
+        
+        <Strong>Group Members: </strong>
+        </br>
+        {% for member in group_member_record.user.all %}
+            {{member}} 
+            </br>
+            {% endfor %}
+        </br>
+      </p>
+      <!--<a href="#" class="btn btn-primary">Go somewhere</a>-->
+    </div>
+  </div>
+
+</br></br>
+<a href="{% url 'group_record_management' %}" class="btn btn-primary">Back</a>
+
+</br>
+</br>
+</br>
+
+
+<div class="card">
+  <div class="card-header">
+      <Strong>Messages:</strong>
+  </div>
+  <div class="card-body">
+    <p class="card-text">
+
+
+    {% for groupchat in group_chats %}
+    
+    {% if groupchat.group.id == group_member_record.id %}
+
+      <Strong>Sender: </strong>{{groupchat.sender}}</br>
+      <Strong>time: </strong>{{groupchat.group_sent_datetime}}</br>
+      <Strong>status: </strong>{{groupchat.send_method}}</br>
+      <Strong>Message: </strong>{{groupchat.group_message_text}}</br>
+      <Strong>Status: </strong>{{groupchat.group_status}}</br>
+
+    {% endif %}
+
+    </br>
+    {% endfor %}
+
+  </p>
+</div>
+</div>
+
+</br></br>
+
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class='col-md-6 offset-md-3'>
+
+    {% if user.is_authenticated %} 
+    
+    <h1> Update Sender </h1>
+
+    <form method='POST'>
+        {% csrf_token %}
+
+        <h1>Edit Sender</h1>
+
+        {{form.as_p}}
+        
+
+    </br>
+        <button type="submit" class="btn btn-secondary">Update</button>
+    </form>
+
+    {% endif %}
+
+</div>
+{% endblock %}

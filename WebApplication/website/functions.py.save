@@ -1,0 +1,15 @@
+from django.conf import settings
+import requests
+
+
+def sendWhatsAppMessage(phoneNumber, message):
+  hearders = {"Authorization": settings.WHATSAPP_TOKEN}
+  payload = {"messaging_product": "whatsapp",
+		   "recipient_type": "individual",
+		   "to": phoneNumber,
+		   "type": "text",
+		   "text": {"body": message}
+		   }
+  reponse =  requests.post(settings.WHATSAPP_URL, hearders=hearders, json=payload)
+  ans = response.json()
+  return ans
