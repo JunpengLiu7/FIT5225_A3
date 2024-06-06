@@ -6,18 +6,29 @@
 </head>
 <body>
     <h1>Upload Image</h1>
-    <input type="file" id="image_file">
+    <input type="file" id="image_file" onchange="updateImageName()">
+    <div id="image_info">
+        <p>Image Name: <span id="image_name"></span></p>
+    </div>
     <button onclick="uploadImage()">Upload</button>
 
     <script>
+        function updateImageName() {
+            var file = document.getElementById('image_file').files[0];
+            var image_name = file.name;
+            document.getElementById('image_name').textContent = image_name;
+        }
+
         function uploadImage() {
             var file = document.getElementById('image_file').files[0];
+            var image_name = document.getElementById('image_name').textContent;
             var reader = new FileReader();
             reader.onload = function(e) {
                 var base64_image = e.target.result.split(',')[1];
                 var data = {
+                    username: '{{ request.user.username }}',
+                    image_name: image_name,
                     image_file: base64_image,
-                    username: 'your_username',
                     access_token: 'your_access_token'
                 };
                 $.ajax({

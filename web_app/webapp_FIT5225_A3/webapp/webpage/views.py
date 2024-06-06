@@ -6,7 +6,10 @@ import boto3
 import os
 import base64
 import requests
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
 
 
 
@@ -101,38 +104,43 @@ def home(request):
             break
 
 
-def convert_image_to_base64(image_file):
-    with open(image_file, "rb") as f:
-        image_base64 = base64.b64encode(f.read()).decode("utf-8")
-    return image_base64
+# def convert_image_to_base64(image_file):
+#     with open(image_file, "rb") as f:
+#         image_base64 = base64.b64encode(f.read()).decode("utf-8")
+#     return image_base64
 
-access_token = 'eyJraWQiOiJhVVNWbGFtUFdsaHFDbFZ4SGNXQnBpZndZV2c5NzJsVjJjOFJmRXBDTGpNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJiNDM4YjQyOC00MDMxLTcwOGMtY2EwNy1jNWZmNjI4NzU5MzUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfYzYzeExEYmhxIiwiY29nbml0bzp1c2VybmFtZSI6InhpYW9uYW5saSIsImdpdmVuX25hbWUiOiJ4aWFvbmFuIiwib3JpZ2luX2p0aSI6Ijk1MTRiMmY4LTlkMWQtNDFmNy1iMDYwLTc0YWY4ODdlOWQ0NiIsImF1ZCI6IjFtYzJmcXI2ZWhvOTBhazB0YWpldXY1NWdxIiwiZXZlbnRfaWQiOiJiZGRhM2ZlMS1iZTZkLTQ0NWItOTc2Yy1lNWNjYmUxZDQzOWIiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcxNzU3MTA4OCwiZXhwIjoxNzE3NjU3NDg4LCJpYXQiOjE3MTc1NzEwODgsImZhbWlseV9uYW1lIjoibGkiLCJqdGkiOiI3MzYxZGY5OS0wOGQyLTRhMDUtYWIyMi1kMWRiNmEwZDM2ZDciLCJlbWFpbCI6ImFsZXgueGlhb25hbkBnbWFpbC5jb20ifQ.c4L7UvDemvVhQ9Y4pF-S46E7pGfgG7EGJ50BqgOEhIwSFVd7PBtUUnJs20gp17C-nm7j0yHf7te8PeP4VVyEKxN6a5vmEaFl1hKWA6iJkrXPiU_MA0hsH90Wljb3hpXekyptirks3KFFHuaF0RP_KuNBaar5O7xLbAB0T0olQk0la6_7-7QOrVpzsX9KglWQrf1VDzQzM3sX8UKFdS18aB6MUhJdYcSBOf_6SWAHXlmfsL_IIYGbZTVqYU-COktpzcwleUVkgQCb37qSxiej9A9mJE-Z_w7F-Qc9tICL6dnJplMXwUtDHZihne6dD_X506Tz3vfWOliaTPyoELfcTQ'
+# access_token = 'eyJraWQiOiJhVVNWbGFtUFdsaHFDbFZ4SGNXQnBpZndZV2c5NzJsVjJjOFJmRXBDTGpNPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJiNDM4YjQyOC00MDMxLTcwOGMtY2EwNy1jNWZmNjI4NzU5MzUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLnVzLWVhc3QtMS5hbWF6b25hd3MuY29tXC91cy1lYXN0LTFfYzYzeExEYmhxIiwiY29nbml0bzp1c2VybmFtZSI6InhpYW9uYW5saSIsImdpdmVuX25hbWUiOiJ4aWFvbmFuIiwib3JpZ2luX2p0aSI6Ijk1MTRiMmY4LTlkMWQtNDFmNy1iMDYwLTc0YWY4ODdlOWQ0NiIsImF1ZCI6IjFtYzJmcXI2ZWhvOTBhazB0YWpldXY1NWdxIiwiZXZlbnRfaWQiOiJiZGRhM2ZlMS1iZTZkLTQ0NWItOTc2Yy1lNWNjYmUxZDQzOWIiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcxNzU3MTA4OCwiZXhwIjoxNzE3NjU3NDg4LCJpYXQiOjE3MTc1NzEwODgsImZhbWlseV9uYW1lIjoibGkiLCJqdGkiOiI3MzYxZGY5OS0wOGQyLTRhMDUtYWIyMi1kMWRiNmEwZDM2ZDciLCJlbWFpbCI6ImFsZXgueGlhb25hbkBnbWFpbC5jb20ifQ.c4L7UvDemvVhQ9Y4pF-S46E7pGfgG7EGJ50BqgOEhIwSFVd7PBtUUnJs20gp17C-nm7j0yHf7te8PeP4VVyEKxN6a5vmEaFl1hKWA6iJkrXPiU_MA0hsH90Wljb3hpXekyptirks3KFFHuaF0RP_KuNBaar5O7xLbAB0T0olQk0la6_7-7QOrVpzsX9KglWQrf1VDzQzM3sX8UKFdS18aB6MUhJdYcSBOf_6SWAHXlmfsL_IIYGbZTVqYU-COktpzcwleUVkgQCb37qSxiej9A9mJE-Z_w7F-Qc9tICL6dnJplMXwUtDHZihne6dD_X506Tz3vfWOliaTPyoELfcTQ'
 
-def upload_image_to_api_gateway(username, image_name, base64_image, api_endpoint, access_token):
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {access_token}"
-    }
-    data = {
-        "username": username,
-        "image_name": image_name,
-        "image_file": base64_image
-    }
-    response = requests.post(api_endpoint, headers=headers, json=data)
-    return response.status_code, response.text
+# def upload_image_to_api_gateway(username, image_name, base64_image, api_endpoint, access_token):
+#     headers = {
+#         "Content-Type": "application/json",
+#         "Authorization": f"Bearer {access_token}"
+#     }
+#     data = {
+#         "username": username,
+#         "image_name": image_name,
+#         "image_file": base64_image
+#     }
+#     response = requests.post(api_endpoint, headers=headers, json=data)
+#     return response.status_code, response.text
 
+@csrf_exempt
 def upload_image(request):
     if request.method == "POST":
-        username = request.POST["username"]
-        print(username)
-        image_name = request.FILES["image"].name
-        image_file = request.FILES["image"]
-        token = access_token
-        base64_image = convert_image_to_base64(image_file)
-        status_code, response_text = upload_image_to_api_gateway(username, image_name, base64_image, "https://5225a3test.auth.us-east-1.amazoncognito.com/oauth2/authorize?client_id=1mc2fqr6eho90ak0tajeuv55gq&response_type=token&scope=email+openid+profile&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Fhome1%2F", token)
-        # Handle the response from the API gateway
-        return HttpResponse(f"Status code: {status_code}, Response: {response_text}")
-    return render(request, "upload_image.html")
+        data = json.loads(request.body)
+        username = data["username"]
+        image_name = data["image_name"]
+        base64_image = data["image_file"]
+        access_token = data["access_token"]
+
+        # Decode the base64 image data
+        image_data = base64.b64decode(base64_image)
+
+        # Save the image or do whatever you need to do with it
+        with open(f"{username}_{image_name}", "wb") as f:
+            f.write(image_data)
+
+        return JsonResponse({"message": "Image uploaded successfully"})
 
     # code = request.GET.get('code')
     # userData = getTokens(code)
