@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+{% if user.is_authenticated %}   
+
+
+<!--
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search for ..." aria-describedby="btnGroupAddon2">
+    <button class="btn btn-default" type="button" id="btnGroupAddon2">Search</button>
+  </div>
+</div>
+-->
+
+<div class="card"  >
+    <div class="card-body">
+      <h5 class="card-title">
+        <a>
+            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+            Sender List
+        </a>
+        <form method="get">
+        <div class="input-group" style="float: right; width:300px; margin-bottom:10px;">
+            <form method >
+            <input type="text" class="form-control" placeholder="Search for ..." aria-label="Search for ..." aria-describedby="btnGroupAddon2" name="search">
+            <span class="input-group-btn">
+                <button class="btn btn-success" type="submit" id="btnGroupAddon2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                      </svg>
+                </button>
+            </span>
+        </div>
+        </form>
+
+    </h5>
+      <table class="table table-bordered table-striped" style="table-layout:fixed;">
+        <thead>
+            <tr>
+              <th scope="col">Phone Number</th>
+              <th scope="col" >Token</th>
+              <th scope="col">Operations</th>
+            </tr>
+          </thead>
+          <tbody>
+              {%if sender_records  %}
+      
+                  {% for sender_record  in sender_records %}
+                  <tr>
+          
+                  
+                      <td>{{ sender_record.phone_number_id}}</td>
+                      
+                      <td>{{ sender_record.access_token}}
+
+                      </td>
+
+
+                      <td>
+                        <a href="{% url 'sender_record' sender_record.id %}" class="btn btn-primary">Record</a>
+
+                        <a href="{% url 'update_sender_record' sender_record.id %}" class="btn btn-primary">Update</a>
+
+                        <a href="{% url 'delete_sender_record' sender_record.id %}" class="btn btn-danger">Delete</a>
+
+                      </td>
+                   </tr>
+                  {% endfor %}
+              {% endif %}
+          </tbody>
+      </table>
+
+     
+    
+    <ul class="pagination justify-content-center">
+        
+        {{page_string}}
+      
+    </ul>
+     
+      
+
+  </div>
+
+
+{% else %}
+
+<h1> login </h1>
+<form method='POST' action="{% url 'home' %}">
+    {% csrf_token %}
+
+    <form>
+        <div class="mb-3">
+          <input type="text" class="form-control" name="username" placeholder="Username" required>
+        </div>
+        <div class="mb-3">
+          <input type="password" class="form-control" name="password" placeholder="Password" required>
+
+        </div>
+        <!--
+        <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Check me out</label>
+        </div>
+        -->
+
+        <button type="submit" class="btn btn-secondary">Submit</button>
+      </form>
+
+</form>
+
+</div>
+
+{% endif %}
+
+{% endblock %}
+
