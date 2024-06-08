@@ -18,3 +18,13 @@ website-5225a3.zip
   Overall layout and CSS: base.html
 
 Lambda Functions:
+  object detection: object_detection folder
+  using tag to check similar image: image_on_image folder
+  subscribe to sns: subscribe folder
+  search url based on tags: tagSearch folder
+  search full size image url based on thumbnail url: thumbnail_fullsize_convert
+  upload image: upload_image folder
+  delete image: deleteImage folder
+  object detection logic: object_detection folder
+  bulk manipulate tags: tagManipulation folder
+  
