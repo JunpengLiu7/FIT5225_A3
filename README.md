@@ -27,4 +27,13 @@ Lambda Functions:
   delete image: deleteImage folder
   object detection logic: object_detection folder
   bulk manipulate tags: tagManipulation folder
-  
+
+Version Update:
+20/5/2024 Created git repository
+23/5/2024 Created basic logics for the lambda function upload image, tag search
+27/5/2024 Created basic logics for the rest of the lambda functions
+31/5/2024 Tested and fine tune the logic for lambda functions
+02/6/2024 Started on the web html overall layout design
+03/6/2024 Finished the layout for web html
+04/6/2024 Started on the backend development for the web html using python
+08/6/2024 Finished the backend logic for html, tested the functionality of the back end.
